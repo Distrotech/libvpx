@@ -19,7 +19,16 @@ ifeq ($(target),)
         done
 all: .DEFAULT
 clean:: .DEFAULT
+ifeq ($(filter win%,$(TGT_OS)),$(TGT_OS))
 install:: .DEFAULT
+	install -d $(DIST_DIR)/$(LIBSUBDIR) $(DIST_DIR)/bin
+	install -m 644 libvpx-1.dll.a $(DIST_DIR)/$(LIBSUBDIR)
+	install -m 755 libvpx-1.dll $(DIST_DIR)/bin
+	rm -f $(DIST_DIR)/$(LIBSUBDIR)/libvpx.so*
+else
+install:: .DEFAULT
+endif
+
 test:: .DEFAULT
 testdata:: .DEFAULT
 
@@ -265,12 +274,22 @@ define so_template
 # for creating them.
 #
 # This needs further abstraction for dealing with non-GNU linkers.
+ifeq ($(filter win%,$(TGT_OS)),$(TGT_OS))
+$(1):
+	$(if $(quiet),@echo "    [LD] $$@")
+	$(qexec)$$(LD) -shared $$(LDFLAGS) \
+            -Wl,--no-undefined -Wl,-soname,$$(SONAME) -Wl,-out-implib,$$(SONAME).a \
+            -Wl,--version-script,$$(EXPORTS_FILE) -o $$(SONAME) \
+            $$(filter %.o,$$^) $$(extralibs)
+	ln -s $$(SONAME) $$@
+else
 $(1):
 	$(if $(quiet),@echo "    [LD] $$@")
 	$(qexec)$$(LD) -shared $$(LDFLAGS) \
             -Wl,--no-undefined -Wl,-soname,$$(SONAME) \
             -Wl,--version-script,$$(EXPORTS_FILE) -o $$@ \
             $$(filter %.o,$$^) $$(extralibs)
+endif
 endef
 
 define dl_template
