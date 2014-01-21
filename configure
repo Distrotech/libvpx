@@ -500,18 +500,18 @@ EOF
 }
 
 process_detect() {
-    if enabled shared; then
-        # Can only build shared libs on a subset of platforms. Doing this check
-        # here rather than at option parse time because the target auto-detect
-        # magic happens after the command line has been parsed.
-        if ! enabled linux; then
-            if enabled gnu; then
-                echo "--enable-shared is only supported on ELF; assuming this is OK"
-            else
-                die "--enable-shared only supported on ELF for now"
-            fi
-        fi
-    fi
+#    if enabled shared; then
+#        # Can only build shared libs on a subset of platforms. Doing this check
+#        # here rather than at option parse time because the target auto-detect
+#        # magic happens after the command line has been parsed.
+#        if ! enabled linux; then
+#            if enabled gnu; then
+#                echo "--enable-shared is only supported on ELF; assuming this is OK"
+#            else
+#                die "--enable-shared only supported on ELF for now"
+#            fi
+#        fi
+#    fi
     if [ -z "$CC" ] || enabled external_build; then
         echo "Bypassing toolchain for environment detection."
         enable_feature external_build
