@@ -16,7 +16,7 @@
 #define kMaxStride (2048 * 4)
 #define IS_ALIGNED(p, a) (!((uintptr_t)(p) & ((a) - 1)))
 
-#if defined(COVERAGE_ENABLED) || defined(TARGET_IPHONE_SIMULATOR)
+#if defined(COVERAGE_ENABLED) || defined(TARGET_IPHONE_SIMULATOR) || defined(__ILP32__)
 #define YUV_DISABLE_ASM
 #endif
 
