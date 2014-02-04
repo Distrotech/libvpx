@@ -19,15 +19,13 @@ ifeq ($(target),)
         done
 all: .DEFAULT
 clean:: .DEFAULT
-ifeq ($(filter win%,$(TGT_OS)),$(TGT_OS))
 install:: .DEFAULT
-	install -d $(DIST_DIR)/$(LIBSUBDIR) $(DIST_DIR)/bin
-	install -m 644 libvpx-1.dll.a $(DIST_DIR)/$(LIBSUBDIR)
-	install -m 755 libvpx-1.dll $(DIST_DIR)/bin
-	rm -f $(DIST_DIR)/$(LIBSUBDIR)/libvpx.so*
-else
-install:: .DEFAULT
-endif
+	if [ -e libvpx-1.dll ];then \
+	  install -d $(DIST_DIR)/$(LIBSUBDIR) $(DIST_DIR)/bin; \
+	  install -m 644 libvpx-1.dll.a $(DIST_DIR)/$(LIBSUBDIR); \
+	  install -m 755 libvpx-1.dll $(DIST_DIR)/bin; \
+	  rm -f $(DIST_DIR)/$(LIBSUBDIR)/libvpx.so*; \
+	fi;
 
 test:: .DEFAULT
 testdata:: .DEFAULT
